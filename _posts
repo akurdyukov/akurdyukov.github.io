@@ -1,0 +1,93 @@
+## Flapjack installation
+
+Quick and simple guide for installing (Flapjack)[http://flapjack.io] on Amazon Linux.
+
+1. Install requirements:
+
+```bash
+    yum install ruby21 ruby21-devel make gcc gcc-c++ rubygems21 rubygem21-devel openssl openssl-devel git vim-enhanced libxml libxml-devel libxslt libxslt-devel patch redis
+```
+
+  Switch default Ruby implementation
+
+```
+      alternatives --config ruby
+```
+
+  and select Ruby 2.1 option (usually it's number 2)
+
+2. Install Flapjack GEM
+
+  .. code-block:: bash
+
+      gem install flapjack
+
+  Install configuration file
+
+  .. code-block:: bash
+
+      mkdir /etc/flapjack
+      cp /usr/local/share/ruby/gems/2.1/gems/flapjack-1.1.0/etc/flapjack_config.yaml.example /etc/flapjack/flapjack_config.yaml
+
+  Edit ``/etc/flapjack/flapjack_config.yaml`` in section ``production`` subsection ``redis`` for correct Redis port. Usually it's ``6379``.
+
+3. Start `redis` service
+
+  .. code-block:: bash
+
+      service redis start
+
+  Install init.d scripts for flapjack
+
+  .. code-block:: bash
+
+      cp /usr/local/share/ruby/gems/2.1/gems/flapjack-1.1.0/dist/etc/init.d/* /etc/init.d/
+
+  and fix requirements to
+
+  ::
+
+      # Required-Start: $syslog $remote_fs redis
+      # Required-Stop:  $syslog $remote_fs redis
+
+  and ``PATH`` with ``PATH=/usr/local/share/ruby/gems/2.1/gems/flapjack-1.1.0/bin:$PATH``
+
+4. Fix import bug in flapjack starter by adding line
+
+  .. code-block:: ruby
+
+      require 'flapjack'
+
+  below line
+
+  .. code-block:: ruby
+
+      require 'gli'
+
+5. Start flapjack
+
+  .. code-block:: bash
+
+      service flapjack start
+
+6. (Optional) You can use Nginx as reverse proxy for flapjack. Just add ``base_url`` parameter to ``/etc/flapjack/flapjack_config.yaml`` like this
+
+  .. code-block:: yaml
+
+      # Browsable web interface
+      web:
+        enabled: yes
+        base_url: "/flapjack/"
+        port: 3080
+        timeout: 300
+
+  and add nginx location
+
+  .. code-block:: nginx
+
+          location /flapjack/ {
+              proxy_pass http://127.0.0.1:3080/;
+              proxy_redirect off;
+          }
+
+Hope everything works for you :)
