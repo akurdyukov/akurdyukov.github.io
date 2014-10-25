@@ -23,14 +23,14 @@ footer-links:
   flickr: 
   github: akurdyukov
   instagram: 
-  linkedin: 
+  linkedin: akurdyukov
   pinterest: 
   rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
   twitter: AlikKurdyukov
   stackoverflow: users/1086794/alik
 
 # Your disqus shortname, entering this will enable commenting on posts
-disqus: 
+disqus: akurdyukov
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
 google_analytics: UA-7411362-1
